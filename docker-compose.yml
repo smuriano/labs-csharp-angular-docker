@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    restart: always
+    environment:
+      SA_PASSWORD: "M@vv33rp"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 1433:1433
+    networks:
+      - app-network
+
+networks: 
+    app-network:
+      driver: bridge
