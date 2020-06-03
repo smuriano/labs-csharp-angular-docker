@@ -5,19 +5,18 @@
         <h2>Ordem de serviços</h2>
       </div>
       <div class="ml-auto p-2 bd-highlight">
-        <button type="button" class="btn btn-primary">+ Ordem</button>
+        <button type="button" class="btn btn-primary" [routerLink]="['/ordens/novo']">+ Ordem</button>
       </div>
     </div>
   </div>
 
   <div class="row row-cols-1 row-cols-md-2" *ngIf="(ordemServicosList$ | async) as ordemServicosList; else loading">
-    <div *ngFor="let ordemServico of ordemServicosList">
-      <app-ordemservico-card [ordemServicoList]="ordemServico"></app-ordemservico-card>
-    </div>
+    <app-ordemservico-card *ngFor="let ordemServico of ordemServicosList" [ordemServicoList]="ordemServico">
+    </app-ordemservico-card>
   </div>
 
   <ng-template #loading>
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-secondary" role="alert">
       <h4 class="alert-heading">Aguarde...</h4>
       <p>Carregando as ordens de serviços.</p>
     </div>

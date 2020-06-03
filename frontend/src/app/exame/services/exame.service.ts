@@ -16,8 +16,6 @@ export class ExameService {
 
   getExames() {
     return this.http.get<Exame[]>(`${this.examesApi}`).pipe(
-      delay(800), // Simular uma demora no retorno da API
-      tap((res: any) => console.log('getExames:', res))
     );
   }
 }

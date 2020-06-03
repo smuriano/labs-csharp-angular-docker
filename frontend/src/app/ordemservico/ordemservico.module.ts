@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { OrdemServicoRoutingModule } from './ordemservico.routing';
 import { OrdemServicoAppComponent } from './ordemservico.app.component';
@@ -16,6 +17,7 @@ import { OrdemServicoCardComponent } from './components/ordemservico-card/ordems
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     OrdemServicoRoutingModule
   ]
 })

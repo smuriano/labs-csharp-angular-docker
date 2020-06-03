@@ -16,8 +16,6 @@ export class MedicoService {
 
   getMedicos() {
     return this.http.get<Medico[]>(`${this.medicosApi}`).pipe(
-      delay(800), // Simular uma demora no retorno da API
-      tap((res: any) => console.log('getMedicos:', res))
     );
   }
 }

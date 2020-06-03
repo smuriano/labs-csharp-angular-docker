@@ -16,8 +16,6 @@ export class PacienteService {
 
   getPacientes() {
     return this.http.get<Paciente[]>(`${this.pacientesApi}`).pipe(
-      delay(800), // Simular uma demora no retorno da API
-      tap((res: any) => console.log('getPacientes:', res))
     );
   }
 }

@@ -1,1 +1,132 @@
-<p>form-page works!</p>
+<div class="container" [formGroup]="ordemServicoForm">
+  <div class="py-4">
+    <div class="form-row">
+      <div class="col-md-10 mb-1">
+        <label class=" control-label">Posto Coleta</label>
+        <select class="form-control" id="postoColetaId" formControlName="postoColetaId">
+          <option *ngFor="let postoColeta of postoColetas$ | async" value="{{ postoColeta.id }}">
+            {{ postoColeta.descricao }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-2 mb-1">
+        <label class="control-label">Data</label>
+        <input type="date" class="form-control" id="data" formControlName="data" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 mb-1">
+        <label class=" control-label">Paciente</label>
+        <select class="form-control" id="pacienteId" formControlName="pacienteId">
+          <option *ngFor="let paciente of pacientes$ | async" value="{{ paciente.id }}">
+            {{ paciente.nome }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-6 mb-1">
+        <label class="control-label">Médico</label>
+        <select class="form-control" id="medicoId" formControlName="medicoId">
+          <option *ngFor="let medico of medicos$ | async" value="{{ medico.id }}">
+            {{ medico.nome }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 mb-1">
+        <label class="control-label">Convênio</label>
+        <input type="text" class="form-control" id="convenio" formControlName="convenio" value="">
+      </div>
+      <div class="col-md-2 mb-1">
+        <label class="control-label">Data Retirada</label>
+        <input type="date" class="form-control" id="dataRetirada" formControlName="dataRetirada" required>
+      </div>
+      <div class="col-md-4 mb-1">
+        <label class="control-label">Valor da ordem de serviço</label>
+        <input type="numer" class="form-control text-right" id="valorOrdem" name="valorOrdem" readonly>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row bd-highlight mt-1 mb-1">
+      <div class="bd-highlight">
+        <h4>Exames</h4>
+      </div>
+      <div class="ml-auto bd-highlight">
+        <button type="button" class="btn btn-sm btn-primary text-white" (click)="onOpenModalExameItem(0, exames)">
+          <i class="fas fa-plus-circle"></i>
+          Exame
+        </button>
+      </div>
+    </div>
+    <table class="table table-sm table-borderless">
+      <thead>
+        <tr class="d-flex">
+          <th class="bg-primary text-white col-1" scope="col">#</th>
+          <th class="bg-primary text-white col-7" scope="col">Exame</th>
+          <th class="bg-primary text-white col-2" scope="col">Valor</th>
+          <th class="bg-primary text-white col-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="d-flex" *ngIf="items?.length == 0">
+          <td class="col-sm-12 font-italic text-center">
+            Nenhum exame adicionado na ordem de serviço.
+          </td>
+        </tr>
+        <tr class="d-flex" *ngFor="let item of items; let i=index;">
+          <th class="col-1" scope="row">{{ i }}</th>
+          <td class="col-sm-7">{{ item.exameNome }}</td>
+          <td class="col-sm-2">{{ item.preco | currency: 'BRL' }}</td>
+          <td class="col-sm-2">
+            <span class="float-right">
+              <button class="btn btn-sm btn-outline-primary" (click)="onOpenModalExameItem(i, exames)">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger ml-2">
+                <i class="far fa-trash-alt"></i>
+              </button>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group">
+      <button type="button" class="btn btn-primary"><i class="fas fa-check"></i> Salvar</button>
+      <button type="button" class="btn btn-outline-danger ml-1"><i class="fas fa-times"></i> Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #exames>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Exame</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col-md-12 mb-1">
+        <label class="control-label">Exame</label>
+        <!-- <select class="form-control" id="postoColetaId" formControlName="postoColetaId" -->
+        <select class="form-control">
+          <option *ngFor="let exame of exames$ | async" value="{{ exame.id }}">
+            {{ exame.descricao }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-4 mb-1">
+        <label class="control-label">Valor do Exame</label>
+        <input type="numer" class="form-control text-right" id="currency" name="currency" readonly>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="onAddOrEditExames()"><i class="fas fa-check"></i>
+      Salvar</button>
+    <button type="button" class="btn btn-outline-secondary ml-1" (click)="closeModal()"><i class="fas fa-times"></i>
+      Cancelar</button>
+  </div>
+</ng-template>

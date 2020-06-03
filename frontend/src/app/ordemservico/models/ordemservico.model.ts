@@ -1,4 +1,4 @@
-import { OrdemServicoItem } from './ordemservicoitem.model';
+import { OrdemServicoExame } from './ordemservicoexame.model';
 
 export class OrdemServico {
   constructor(
@@ -9,6 +9,6 @@ export class OrdemServico {
     public convenio: string,
     public medicoId: string,
     public dataRetirada: Date,
-    public items: OrdemServicoItem[] = []
+    public exames: OrdemServicoExame[] = []
   ) { }
 }

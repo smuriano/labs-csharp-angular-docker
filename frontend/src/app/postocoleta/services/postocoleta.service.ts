@@ -16,8 +16,6 @@ export class PostoColetaService {
 
   getPostoColetas() {
     return this.http.get<PostoColeta[]>(`${this.postoColetasApi}`).pipe(
-      delay(800), // Simular uma demora no retorno da API
-      tap((res: any) => console.log('getPostoColetas:', res))
     );
   }
 }
