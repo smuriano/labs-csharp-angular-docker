@@ -11,8 +11,8 @@ namespace Labs.Infra.EntityTypeConfigurations
       builder.HasKey(x => x.Id);
 
       builder.Property(x => x.Version).IsRowVersion();
-      builder.Property(x => x.CreatedAt).HasColumnType("datetime");
-      builder.Property(x => x.ModifiedAt).HasColumnType("datetime");
+      builder.Property(x => x.CreatedAt).HasColumnType("timestamp");
+      builder.Property(x => x.ModifiedAt).HasColumnType("timestamp");
 
       builder.Property(x => x.LabId).IsRequired().HasMaxLength(32);
       builder.Property(x => x.Descricao).IsRequired().HasMaxLength(60);
@@ -26,7 +26,7 @@ namespace Labs.Infra.EntityTypeConfigurations
       builder.OwnsOne(x => x.Endereco)
         .Property(o => o.Complemento).HasColumnName("Complemento").HasMaxLength(30);
       builder.OwnsOne(x => x.Endereco)
-        .Property(o => o.Bairro).HasColumnName("Complemento").HasMaxLength(50);
+        .Property(o => o.Bairro).HasColumnName("Bairro").HasMaxLength(50);
       builder.OwnsOne(x => x.Endereco)
         .Property(o => o.Cidade).HasColumnName("Cidade").HasMaxLength(100);
       builder.OwnsOne(x => x.Endereco)

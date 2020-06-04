@@ -11,8 +11,8 @@ namespace Labs.Infra.EntityTypeConfigurations
       builder.HasKey(x => x.Id);
 
       builder.Property(x => x.Version).IsRowVersion();
-      builder.Property(x => x.CreatedAt).HasColumnType("datetime");
-      builder.Property(x => x.ModifiedAt).HasColumnType("datetime");
+      builder.Property(x => x.CreatedAt).HasColumnType("timestamp");
+      builder.Property(x => x.ModifiedAt).HasColumnType("timestamp");
 
       builder.Property(x => x.Nome).IsRequired().HasMaxLength(60);
       builder.Property(x => x.CRM).IsRequired().HasMaxLength(10);

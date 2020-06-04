@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Labs.Domain.Medicos.Entities;
 using Labs.Domain.Medicos.Repositories;
@@ -21,6 +22,7 @@ namespace Labs.Infra.Repositories
     public async Task<IEnumerable<Medico>> GetAllAsync() => await _context.Medicos.AsNoTracking().OrderBy(x => x.Nome).ToListAsync();
 
     public async Task<Medico> GetByIdAsync(Guid id) => await _context.Medicos.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+    public async Task<IEnumerable<Medico>> FindByAsync(Expression<Func<Medico, bool>> predicate) => await _context.Medicos.AsNoTracking().Where(predicate).ToListAsync();
 
     public async Task AddAsync(Medico medico) => await _context.Medicos.AddAsync(medico);
 

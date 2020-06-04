@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Labs.Domain.Exames.Entities;
 using Labs.Domain.Medicos.Entities;
+using Labs.Domain.OrdensServico.Entities;
 using Labs.Domain.Pacientes.Entities;
 using Labs.Domain.PostosColeta.Entities;
 using Labs.Infra.EntityTypeConfigurations;
@@ -29,6 +30,8 @@ namespace Labs.Infra.Contexts
     public DbSet<Medico> Medicos { get; set; }
     public DbSet<Paciente> Pacientes { get; set; }
     public DbSet<PostoColeta> PostosColeta { get; set; }
+    public DbSet<OrdemServico> OrdensServico { get; set; }
+    public DbSet<OrdemServicoExame> OrdemServicoExames { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -36,6 +39,8 @@ namespace Labs.Infra.Contexts
       builder.ApplyConfiguration(new MedicoConfiguration());
       builder.ApplyConfiguration(new PacienteConfiguration());
       builder.ApplyConfiguration(new PostoColetaConfiguration());
+      builder.ApplyConfiguration(new OrdemServicoConfiguration());
+      builder.ApplyConfiguration(new OrdemServicoExameConfiguration());
 
       base.OnModelCreating(builder);
     }

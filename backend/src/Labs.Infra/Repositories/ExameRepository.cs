@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Labs.Domain.Exames.Entities;
 using Labs.Domain.Exames.Repositories;
@@ -21,6 +22,8 @@ namespace Labs.Infra.Repositories
     public async Task<IEnumerable<Exame>> GetAllAsync() => await _context.Exames.AsNoTracking().OrderBy(x => x.Descricao).ToListAsync();
 
     public async Task<Exame> GetByIdAsync(Guid id) => await _context.Exames.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+
+    public async Task<IEnumerable<Exame>> FindByAsync(Expression<Func<Exame, bool>> predicate) => await _context.Exames.AsNoTracking().Where(predicate).ToListAsync();
 
     public async Task AddAsync(Exame exame) => await _context.Exames.AddAsync(exame);
 

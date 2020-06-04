@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Labs.Domain.PostosColeta.Entities;
 using Labs.Domain.PostosColeta.Repositories;
@@ -21,6 +22,7 @@ namespace Labs.Infra.Repositories
     public async Task<IEnumerable<PostoColeta>> GetAllAsync() => await _context.PostosColeta.AsNoTracking().OrderBy(x => x.Descricao).ToListAsync();
 
     public async Task<PostoColeta> GetByIdAsync(Guid id) => await _context.PostosColeta.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+    public async Task<IEnumerable<PostoColeta>> FindByAsync(Expression<Func<PostoColeta, bool>> predicate) => await _context.PostosColeta.AsNoTracking().Where(predicate).ToListAsync();
 
     public async Task AddAsync(PostoColeta PostoColeta) => await _context.PostosColeta.AddAsync(PostoColeta);
 

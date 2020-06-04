@@ -14,6 +14,8 @@ namespace Labs.Domain.Miscellaneous.ValueObjects
       Bairro = bairro;
       Cidade = cidade;
       Estado = estado;
+
+      Validate(this, new EnderecoValidation());
     }
 
     public string Cep { get; private set; }
@@ -26,14 +28,7 @@ namespace Labs.Domain.Miscellaneous.ValueObjects
 
     public override string ToString()
     {
-      if (Complemento.Trim() != "")
-      {
-        return $"{Logradouro}, {Numero} - {Complemento}, {Bairro}, {Cidade}, {Estado}";
-      }
-      else
-      {
-        return $"{Logradouro}, {Numero} - {Complemento}, {Bairro}, {Cidade}, {Estado}";
-      }
+      return $"{Logradouro}, {Numero} - {Complemento}, {Bairro}, {Cidade}, {Estado}";
     }
   }
   public class EnderecoValidation : AbstractValidator<Endereco>
@@ -41,30 +36,30 @@ namespace Labs.Domain.Miscellaneous.ValueObjects
     public EnderecoValidation()
     {
       RuleFor(a => a.Cep)
-        .NotEmpty().When(a => !string.IsNullOrEmpty(a.Logradouro)).WithMessage($"Cep é obrigatório");
+        .NotEmpty().When(a => !string.IsNullOrEmpty(a.Logradouro)).WithMessage("Cep é obrigatório");
 
       RuleFor(a => a.Cep)
         .MinimumLength(8).WithMessage("Cep deve ter no mínimo 5 caracteres");
 
       RuleFor(a => a.Logradouro)
-        .NotEmpty().When(a => !string.IsNullOrEmpty(a.Cep)).WithMessage($"Endereço é obrigatório");
+        .NotEmpty().When(a => !string.IsNullOrEmpty(a.Cep)).WithMessage("Endereço é obrigatório");
 
       When(a => !string.IsNullOrEmpty(a.Logradouro), () =>
       {
         RuleFor(a => a.Numero)
-          .NotEmpty().WithMessage($"Número é obrigatório");
+          .NotEmpty().WithMessage("Número é obrigatório");
 
         RuleFor(a => a.Bairro)
-          .NotEmpty().WithMessage($"Bairro é obrigatório");
+          .NotEmpty().WithMessage("Bairro é obrigatório");
 
         RuleFor(a => a.Cidade)
-          .NotEmpty().WithMessage($"Cidade é obrigatório");
+          .NotEmpty().WithMessage("Cidade é obrigatório");
       });
 
       When(a => !string.IsNullOrEmpty(a.Cidade), () =>
       {
         RuleFor(a => a.Estado)
-          .NotEmpty().WithMessage($"Estado é obrigatório");
+          .NotEmpty().WithMessage("Estado é obrigatório");
       });
     }
   }
