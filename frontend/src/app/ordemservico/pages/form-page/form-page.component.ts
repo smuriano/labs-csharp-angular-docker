@@ -4,10 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, EMPTY, of } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
-import { PostoColeta } from './../../../postocoleta/models/postocoleta.model';
-import { Medico } from 'src/app/medico/models/medico.model';
-import { Exame } from './../../../exame/models/exame.model';
-import { Paciente } from './../../../paciente/models/paciente.model';
+import { PostoColetaViewModel } from './../../../postocoleta/models/postocoletaviewmodel.model';
+import { MedicoViewModel } from './../../../medico/models/medicoviewmodel.model';
+import { ExameViewModel } from '../../../exame/models/exameviewmodel.model';
+import { PacienteViewModel } from '../../../paciente/models/pacienteviewmodel.model';
 import { OrdemServicoExame } from './../../models/ordemservicoexame.model';
 
 import { OrdemServicoService } from '../../services/ordemservico.service';
@@ -25,10 +25,10 @@ export class FormPageComponent implements OnInit {
   public ordemServicoForm: FormGroup;
   public items: OrdemServicoExame[] = [];
 
-  public postoColetas$: Observable<PostoColeta[]> = null;
-  public medicos$: Observable<Medico[]> = null;
-  public exames$: Observable<Exame[]> = null;
-  public pacientes$: Observable<Paciente[]> = null;
+  public postoColetas$: Observable<PostoColetaViewModel[]> = null;
+  public medicos$: Observable<MedicoViewModel[]> = null;
+  public exames$: Observable<ExameViewModel[]> = null;
+  public pacientes$: Observable<PacienteViewModel[]> = null;
 
   public modalRef: BsModalRef;
   public index: number;
@@ -74,13 +74,13 @@ export class FormPageComponent implements OnInit {
   }
 
   onAddOrEditExames(): void {
-    if (this.index && this.index === 0)
-      this.items.push(new OrdemServicoExame(0, 0, 'Exame {{index}', 0));
+    // if (this.index && this.index === 0)
+    //   this.items.push(new OrdemServicoExame(0, 0, 'Exame {{index}', 0));
     console.log("sucesso");
     this.closeModal();
   }
 
   updateTotal(): void {
-    this.ordemServicoForm.patchValue('valorOrdem') = this.items.reduce((total, item) => total + (item.preco), 0);
+    // this.ordemServicoForm.patchValue('valorOrdem') = this.items.reduce((total, item) => total + (item.preco), 0);
   }
 }

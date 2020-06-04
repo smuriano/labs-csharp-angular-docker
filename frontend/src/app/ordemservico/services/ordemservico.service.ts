@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { take, delay, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { OrdemServicoList } from './../models/ordemservico.list.model';
+import { OrdemServicoListViewModel } from '../models/ordemservicolistviewmodel.model';
 import { OrdemServico } from '../models/ordemservico.model';
 
 @Injectable({
@@ -11,13 +11,13 @@ import { OrdemServico } from '../models/ordemservico.model';
 })
 export class OrdemServicoService {
 
-  public ordensApi = `${environment.apiUrl}/v1/ordens`;
+  public ordensApi = `${environment.apiUrl}/v1/ordensServico`;
 
   constructor(private http: HttpClient) { }
 
   getOrdens() {
-    return this.http.get<OrdemServicoList[]>(`${this.ordensApi}`).pipe(
-      delay(200) // Simular uma demora no retorno da API
+    return this.http.get<OrdemServicoListViewModel[]>(`${this.ordensApi}`).pipe(
+      //delay(200) // Simular uma demora no retorno da API
     );
   }
 
@@ -27,5 +27,5 @@ export class OrdemServicoService {
     );
   }
 
-  
+
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-import { OrdemServicoList } from './../../models/ordemservico.list.model';
+import { OrdemServicoListViewModel } from '../../models/ordemservicolistviewmodel.model';
 
 @Component({
   selector: 'app-ordemservico-card',
@@ -9,7 +9,7 @@ import { OrdemServicoList } from './../../models/ordemservico.list.model';
 })
 export class OrdemServicoCardComponent implements OnInit {
 
-  @Input() ordemServicoList: OrdemServicoList;
+  @Input() ordemServicoList: OrdemServicoListViewModel;
 
   constructor(private toastr: ToastrService) { }
 

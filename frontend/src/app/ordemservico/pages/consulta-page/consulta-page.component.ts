@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { OrdemServicoList } from './../../models/ordemservico.list.model';
+import { OrdemServicoListViewModel } from '../../models/ordemservicolistviewmodel.model';
 import { OrdemServicoService } from './../../services/ordemservico.service';
 
 @Component({
@@ -10,12 +10,11 @@ import { OrdemServicoService } from './../../services/ordemservico.service';
 })
 export class ConsultaPageComponent implements OnInit {
 
-  public ordemServicosList$: Observable<OrdemServicoList[]> = null;
+  public ordemServicosList$: Observable<OrdemServicoListViewModel[]> = null;
 
   constructor(private ordemServicoService: OrdemServicoService) { }
 
   ngOnInit(): void {
     this.ordemServicosList$ = this.ordemServicoService.getOrdens();
   }
-
 }

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { take, delay, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { Paciente } from '../models/paciente.model';
+import { PacienteViewModel } from '../models/pacienteviewmodel.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class PacienteService {
   constructor(private http: HttpClient) { }
 
   getPacientes() {
-    return this.http.get<Paciente[]>(`${this.pacientesApi}`).pipe(
+    return this.http.get<PacienteViewModel[]>(`${this.pacientesApi}`).pipe(
     );
   }
 }

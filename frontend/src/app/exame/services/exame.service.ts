@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { take, delay, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { Exame } from '../models/exame.model';
+import { ExameViewModel } from '../models/exameviewmodel.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class ExameService {
   constructor(private http: HttpClient) { }
 
   getExames() {
-    return this.http.get<Exame[]>(`${this.examesApi}`).pipe(
+    return this.http.get<ExameViewModel[]>(`${this.examesApi}`).pipe(
     );
   }
 }
