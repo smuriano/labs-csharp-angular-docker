@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Labs.Infra.Transactions
+namespace Labs.Domain.Transactions
 {
   public interface IUoW
   {

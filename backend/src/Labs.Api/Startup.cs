@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using Labs.Domain.Exames.Repositories;
 using Labs.Domain.Medicos.Repositories;
+using Labs.Domain.OrdensServico.Handlers;
 using Labs.Domain.OrdensServico.Repositories;
 using Labs.Domain.Pacientes.Repositories;
 using Labs.Domain.PostosColeta.Repositories;
+using Labs.Domain.Transactions;
 using Labs.Infra.Contexts;
 using Labs.Infra.Repositories;
 using Labs.Infra.Transactions;
@@ -41,6 +43,7 @@ namespace Labs.Api
       services.AddTransient<IPacienteRepository, PacienteRepository>();
       services.AddTransient<IPostoColetaRepository, PostoColetaRepository>();
       services.AddTransient<IUoW, UoW>();
+      services.AddTransient<OrdemServicoHandler, OrdemServicoHandler>();
 
       services.AddCors();
       services.AddControllers();

@@ -36,10 +36,10 @@ namespace Labs.Infra.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("timestamp");
 
-                    b.Property<double>("Preco")
+                    b.Property<decimal>("Preco")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("double precision")
-                        .HasDefaultValue(0.0);
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
@@ -157,10 +157,10 @@ namespace Labs.Infra.Migrations
                     b.Property<Guid?>("OrdemServicoId1")
                         .HasColumnType("uuid");
 
-                    b.Property<double>("Preco")
+                    b.Property<decimal>("Preco")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("double precision")
-                        .HasDefaultValue(0.0);
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()

@@ -28,10 +28,27 @@ namespace Labs.Infra.Repositories
         .OrderByDescending(x => x.DataRetirada)
         .ToListAsync();
 
-    public async Task<OrdemServico> GetByIdAsync(Guid id) => await _context.OrdensServico.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+    public async Task<OrdemServico> GetByIdAsync(Guid id) =>
+      await _context.OrdensServico
+        .Include(x => x.PostoColeta)
+        .Include(x => x.Paciente)
+        .Include(x => x.Medico)
+        .Include(x => x.Exames)
+        .AsNoTracking()
+        .SingleOrDefaultAsync(x => x.Id == id);
+
     public async Task<IEnumerable<OrdemServico>> FindByAsync(Expression<Func<OrdemServico, bool>> predicate) => await _context.OrdensServico.AsNoTracking().Where(predicate).ToListAsync();
 
-    public async Task AddAsync(OrdemServico ordemServico) => await _context.OrdensServico.AddAsync(ordemServico);
+    public async Task AddAsync(OrdemServico ordemServico)
+    {
+      await _context.OrdensServico.AddAsync(ordemServico);
+    }
+
+    public async Task AddExameAsync(OrdemServicoExame ordemServicoExame)
+    {
+      await _context.OrdemServicoExames.AddAsync(ordemServicoExame);
+    }
+
     public async Task UpdateAsync(OrdemServico ordemServico)
     {
       var entityExist = await GetByIdAsync(ordemServico.Id);

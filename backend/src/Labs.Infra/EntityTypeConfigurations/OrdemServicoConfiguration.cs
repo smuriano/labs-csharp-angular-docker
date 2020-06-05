@@ -20,7 +20,7 @@ namespace Labs.Infra.EntityTypeConfigurations
       builder.Property(x => x.Convenio).IsRequired().HasMaxLength(30);
       builder.HasOne(x => x.Medico).WithMany().HasForeignKey(x => x.MedicoId);
 
-      builder.HasMany(x => x.Exames);
+      builder.HasMany(x => x.Exames).WithOne(i => i.OrdemServico).HasForeignKey(f => f.OrdemServicoId);
 
       builder.Ignore(x => x.ValidationResult);
       builder.Ignore(x => x.IsValid);

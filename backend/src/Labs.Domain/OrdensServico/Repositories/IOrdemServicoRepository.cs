@@ -13,6 +13,7 @@ namespace Labs.Domain.OrdensServico.Repositories
     Task<IEnumerable<OrdemServico>> FindByAsync(Expression<Func<OrdemServico, bool>> predicate);
 
     Task AddAsync(OrdemServico ordemServico);
+    Task AddExameAsync(OrdemServicoExame ordemServicoExame);
     Task UpdateAsync(OrdemServico ordemServico);
     Task RemoveAsync(Guid id);
   }

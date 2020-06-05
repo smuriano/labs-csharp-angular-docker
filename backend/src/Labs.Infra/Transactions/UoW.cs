@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Labs.Domain.Transactions;
 using Labs.Infra.Contexts;
 
 namespace Labs.Infra.Transactions

@@ -3,81 +3,92 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Labs.Infra.Migrations
 {
-    public partial class OrdemServico : Migration
+    public partial class InitialVersion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "PostosColeta",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
+            migrationBuilder.CreateTable(
+                name: "Exames",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Descricao = table.Column<string>(maxLength: 60, nullable: false),
+                    Preco = table.Column<decimal>(nullable: false, defaultValue: 0m)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exames", x => x.Id);
+                });
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "PostosColeta",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
+            migrationBuilder.CreateTable(
+                name: "Medicos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Nome = table.Column<string>(maxLength: 60, nullable: false),
+                    CRM = table.Column<string>(maxLength: 10, nullable: false),
+                    Especialidade = table.Column<string>(maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Medicos", x => x.Id);
+                });
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "Pacientes",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
+            migrationBuilder.CreateTable(
+                name: "Pacientes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Nome = table.Column<string>(maxLength: 60, nullable: false),
+                    CPF = table.Column<string>(maxLength: 20, nullable: false),
+                    RG = table.Column<string>(maxLength: 20, nullable: false),
+                    DataNascimento = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Sexo = table.Column<string>(maxLength: 1, nullable: false),
+                    Cep = table.Column<string>(maxLength: 10, nullable: true),
+                    Logradouro = table.Column<string>(maxLength: 100, nullable: true),
+                    Numero = table.Column<string>(maxLength: 10, nullable: true),
+                    Complemento = table.Column<string>(maxLength: 30, nullable: true),
+                    Bairro = table.Column<string>(maxLength: 50, nullable: true),
+                    Cidade = table.Column<string>(maxLength: 100, nullable: true),
+                    Estado = table.Column<string>(maxLength: 2, nullable: true),
+                    Celular = table.Column<string>(maxLength: 20, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pacientes", x => x.Id);
+                });
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "DataNascimento",
-                table: "Pacientes",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Pacientes",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "Medicos",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Medicos",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "Exames",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Exames",
-                type: "timestamp",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime");
+            migrationBuilder.CreateTable(
+                name: "PostosColeta",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    LabId = table.Column<Guid>(maxLength: 32, nullable: false),
+                    Descricao = table.Column<string>(maxLength: 60, nullable: false),
+                    Cep = table.Column<string>(maxLength: 10, nullable: true),
+                    Logradouro = table.Column<string>(maxLength: 100, nullable: true),
+                    Numero = table.Column<string>(maxLength: 10, nullable: true),
+                    Complemento = table.Column<string>(maxLength: 30, nullable: true),
+                    Bairro = table.Column<string>(maxLength: 50, nullable: true),
+                    Cidade = table.Column<string>(maxLength: 100, nullable: true),
+                    Estado = table.Column<string>(maxLength: 2, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostosColeta", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "OrdensServico",
@@ -127,7 +138,7 @@ namespace Labs.Infra.Migrations
                     ModifiedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
                     OrdemServicoId = table.Column<Guid>(nullable: false),
                     ExameId = table.Column<Guid>(nullable: false),
-                    Preco = table.Column<double>(nullable: false, defaultValue: 0.0),
+                    Preco = table.Column<decimal>(nullable: false, defaultValue: 0m),
                     OrdemServicoId1 = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -190,79 +201,19 @@ namespace Labs.Infra.Migrations
                 name: "OrdemServicoExames");
 
             migrationBuilder.DropTable(
+                name: "Exames");
+
+            migrationBuilder.DropTable(
                 name: "OrdensServico");
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "PostosColeta",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
+            migrationBuilder.DropTable(
+                name: "Medicos");
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "PostosColeta",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
+            migrationBuilder.DropTable(
+                name: "Pacientes");
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "Pacientes",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "DataNascimento",
-                table: "Pacientes",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Pacientes",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "Medicos",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Medicos",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "ModifiedAt",
-                table: "Exames",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Exames",
-                type: "datetime",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp");
+            migrationBuilder.DropTable(
+                name: "PostosColeta");
         }
     }
 }

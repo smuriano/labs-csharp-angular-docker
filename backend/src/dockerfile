@@ -1,39 +1,27 @@
-FROM microsoft/aspnetcore:2.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-FROM microsoft/aspnetcore-build:2.0 AS build
-WORKDIR /src
-COPY Solution.sln ./
-COPY ClassLibraryProject/*.csproj ./ClassLibraryProject/
-COPY WebAPIProject/*.csproj ./WebAPIProject/
-
-RUN dotnet restore
-COPY . .
-WORKDIR /src/ClassLibraryProject
-RUN dotnet build -c Release -o /app
-
-WORKDIR /src/WebAPIProject
-RUN dotnet build -c Release -o /app
-
-FROM build AS publish
-RUN dotnet publish -c Release -o /app
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "WebAPIProject.dll"]
-
-
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build-env
-WORKDIR /app
-
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+WORKDIR /src
+COPY Labs.sln ./
+COPY Labs.Shared/*.csproj ./Labs.Shared/
+COPY Labs.Domain/*.csproj ./Labs.Domain/
+COPY Labs.Infra/*.csproj ./Labs.Infra/
+COPY Labs.Api/*.csproj ./Labs.Api/
 RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
+WORKDIR /src/Labs.Shared
+RUN dotnet build -c Release -o /app
+
+WORKDIR /src/Labs.Domain
+RUN dotnet build -c Release -o /app
+
+WORKDIR /src/Labs.Infra
+RUN dotnet build -c Release -o /app
+
+WORKDIR /src/Labs.Api
+RUN dotnet build -c Release -o /app
+
+WORKDIR /app
 RUN dotnet publish -c Release -o out
 
 # Build runtime image

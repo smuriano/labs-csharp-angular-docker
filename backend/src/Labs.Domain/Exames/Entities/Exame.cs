@@ -7,7 +7,7 @@ namespace Labs.Domain.Exames.Entities
   {
     protected Exame() { }
 
-    public Exame(string descricao, double preco)
+    public Exame(string descricao, decimal preco)
     {
       Descricao = descricao;
       Preco = preco;
@@ -16,7 +16,7 @@ namespace Labs.Domain.Exames.Entities
     }
 
     public string Descricao { get; private set; }
-    public double Preco { get; private set; }
+    public decimal Preco { get; private set; }
   }
 
   public class ExameValidator : AbstractValidator<Exame>

@@ -11,8 +11,6 @@ namespace Labs.Domain.OrdensServico.Entities
 {
   public class OrdemServico : Entity
   {
-    private readonly IList<OrdemServicoExame> _exames;
-
     protected OrdemServico() { }
     public OrdemServico(Guid postoColetaId, DateTime dataExame, Guid pacienteId, string convenio, Guid medicoId, DateTime dataRetirada)
     {
@@ -23,8 +21,6 @@ namespace Labs.Domain.OrdensServico.Entities
       MedicoId = medicoId;
       DataRetirada = dataRetirada;
 
-      _exames = new List<OrdemServicoExame>();
-
       Validate(this, new OrdemServicoValidator());
     }
 
@@ -34,7 +30,7 @@ namespace Labs.Domain.OrdensServico.Entities
     public string Convenio { get; private set; }
     public Guid MedicoId { get; private set; }
     public DateTime DataRetirada { get; private set; }
-    public IReadOnlyCollection<OrdemServicoExame> Exames { get; private set; }
+    public List<OrdemServicoExame> Exames { get; set; } = new List<OrdemServicoExame>();
 
     public decimal Total() => Exames.Sum(x => x.Preco);
 
@@ -47,10 +43,22 @@ namespace Labs.Domain.OrdensServico.Entities
       exames.ForEach(exame => AddExame(exame));
     }
 
+    public void AddExames(IEnumerable<OrdemServicoExame> exames)
+    {
+      foreach (var exame in exames)
+      {
+        AddExame(exame);
+      }
+    }
+
+    public void RemoveAllExame()
+    {
+      Exames.Clear();
+    }
     public void AddExame(OrdemServicoExame exame)
     {
       if (exame.IsValid)
-        _exames.Add(exame);
+        Exames.Add(exame);
     }
   }
 
@@ -80,10 +88,10 @@ namespace Labs.Domain.OrdensServico.Entities
 
       RuleFor(x => x.DataRetirada)
           .NotEmpty().WithMessage("Data da retirada é obrigatório")
-          .GreaterThan(x => x.DataExame).WithMessage("Data da retirada deve ser maior que a data do exame");
+          .GreaterThanOrEqualTo(x => x.DataExame).WithMessage("Data da retirada deve ser maior que ou igual a data do exame");
 
       RuleForEach(x => x.Exames)
-        .SetValidator(new OrdemServicoExameValidator());
+          .SetValidator(new OrdemServicoExameValidator());
     }
   }
 }

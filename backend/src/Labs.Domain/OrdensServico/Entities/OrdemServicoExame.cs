@@ -12,6 +12,8 @@ namespace Labs.Domain.OrdensServico.Entities
       OrdemServicoId = ordemServicoId;
       ExameId = exameId;
       Preco = preco;
+
+      Validate(this, new OrdemServicoExameValidator());
     }
 
     public Guid OrdemServicoId { get; private set; }

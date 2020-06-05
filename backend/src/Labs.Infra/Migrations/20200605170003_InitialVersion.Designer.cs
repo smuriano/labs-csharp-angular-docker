@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Labs.Infra.Migrations
 {
     [DbContext(typeof(LabsContext))]
-    [Migration("20200603233406_InitialVersion")]
+    [Migration("20200605170003_InitialVersion")]
     partial class InitialVersion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,7 @@ namespace Labs.Infra.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -36,12 +36,12 @@ namespace Labs.Infra.Migrations
                         .HasMaxLength(60);
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
-                    b.Property<double>("Preco")
+                    b.Property<decimal>("Preco")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("double precision")
-                        .HasDefaultValue(0.0);
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
@@ -65,7 +65,7 @@ namespace Labs.Infra.Migrations
                         .HasMaxLength(10);
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Especialidade")
                         .IsRequired()
@@ -73,7 +73,7 @@ namespace Labs.Infra.Migrations
                         .HasMaxLength(30);
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -88,6 +88,96 @@ namespace Labs.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Medicos");
+                });
+
+            modelBuilder.Entity("Labs.Domain.OrdensServico.Entities.OrdemServico", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Convenio")
+                        .IsRequired()
+                        .HasColumnType("character varying(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp");
+
+                    b.Property<DateTime>("DataExame")
+                        .HasColumnType("timestamp");
+
+                    b.Property<DateTime>("DataRetirada")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp");
+
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostoColetaId")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicoId");
+
+                    b.HasIndex("PacienteId");
+
+                    b.HasIndex("PostoColetaId");
+
+                    b.ToTable("OrdensServico");
+                });
+
+            modelBuilder.Entity("Labs.Domain.OrdensServico.Entities.OrdemServicoExame", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp");
+
+                    b.Property<Guid>("ExameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("timestamp");
+
+                    b.Property<Guid>("OrdemServicoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("OrdemServicoId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Preco")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExameId");
+
+                    b.HasIndex("OrdemServicoId");
+
+                    b.HasIndex("OrdemServicoId1");
+
+                    b.ToTable("OrdemServicoExames");
                 });
 
             modelBuilder.Entity("Labs.Domain.Pacientes.Entities.Paciente", b =>
@@ -107,13 +197,13 @@ namespace Labs.Infra.Migrations
                         .HasMaxLength(20);
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<DateTime>("DataNascimento")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -147,7 +237,7 @@ namespace Labs.Infra.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -159,7 +249,7 @@ namespace Labs.Infra.Migrations
                         .HasMaxLength(32);
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp");
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
@@ -169,6 +259,46 @@ namespace Labs.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PostosColeta");
+                });
+
+            modelBuilder.Entity("Labs.Domain.OrdensServico.Entities.OrdemServico", b =>
+                {
+                    b.HasOne("Labs.Domain.Medicos.Entities.Medico", "Medico")
+                        .WithMany()
+                        .HasForeignKey("MedicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Labs.Domain.Pacientes.Entities.Paciente", "Paciente")
+                        .WithMany()
+                        .HasForeignKey("PacienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Labs.Domain.PostosColeta.Entities.PostoColeta", "PostoColeta")
+                        .WithMany()
+                        .HasForeignKey("PostoColetaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Labs.Domain.OrdensServico.Entities.OrdemServicoExame", b =>
+                {
+                    b.HasOne("Labs.Domain.Exames.Entities.Exame", "Exame")
+                        .WithMany()
+                        .HasForeignKey("ExameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Labs.Domain.OrdensServico.Entities.OrdemServico", "OrdemServico")
+                        .WithMany()
+                        .HasForeignKey("OrdemServicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Labs.Domain.OrdensServico.Entities.OrdemServico", null)
+                        .WithMany("Exames")
+                        .HasForeignKey("OrdemServicoId1");
                 });
 
             modelBuilder.Entity("Labs.Domain.Pacientes.Entities.Paciente", b =>

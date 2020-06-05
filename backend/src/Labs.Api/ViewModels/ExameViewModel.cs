@@ -6,7 +6,7 @@ namespace Labs.Api.ViewModels
   {
     public Guid Id { get; set; }
     public string Descricao { get; set; }
-    public double Preco { get; set; }
+    public decimal Preco { get; set; }
 
   }
 }
