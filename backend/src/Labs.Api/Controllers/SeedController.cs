@@ -50,8 +50,10 @@ namespace Labs.Api.Controllers
     {
       try
       {
+        await _uow.ClearDatabaseAsync();
+        await _uow.CommitAsync();
+
         var exames = new List<Exame>();
-        exames.Add(new Exame("Hemograma", 12.34M));
         exames.Add(new Exame("Hemograma", 12.34M));
         exames.Add(new Exame("Glicose", 12.34M));
         exames.Add(new Exame("GPP", 12.34M));
@@ -281,26 +283,34 @@ namespace Labs.Api.Controllers
         var medico2 = (await _medicoRepository.FindByAsync(x => x.Nome == "Ivair de Almeida")).SingleOrDefault().Id;
         var medico3 = (await _medicoRepository.FindByAsync(x => x.Nome == "Helio Augusto dos Reis Corbucci")).SingleOrDefault().Id;
 
-        var exame1 = (await _exameRepository.FindByAsync(x => x.Descricao == "TGO")).SingleOrDefault().Id;
-        var exame2 = (await _exameRepository.FindByAsync(x => x.Descricao == "TGP")).SingleOrDefault().Id;
-        var exame3 = (await _exameRepository.FindByAsync(x => x.Descricao == "TSH")).SingleOrDefault().Id;
-
-        var ordemServicoExames = new List<OrdemServicoExame>();
-        ordemServicoExames.Add(new OrdemServicoExame(Guid.Empty, exame1, 12.34M));
-        ordemServicoExames.Add(new OrdemServicoExame(Guid.Empty, exame2, 12.34M));
-        ordemServicoExames.Add(new OrdemServicoExame(Guid.Empty, exame3, 12.34M));
+        var exame1 = (await _exameRepository.FindByAsync(x => x.Descricao == "TGO")).SingleOrDefault();
+        var exame2 = (await _exameRepository.FindByAsync(x => x.Descricao == "TGP")).SingleOrDefault();
+        var exame3 = (await _exameRepository.FindByAsync(x => x.Descricao == "TSH")).SingleOrDefault();
 
         var ordemServico1 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente1, "Unimed", medico1, DateTime.Parse("2020-06-01"));
-        var ordemServico2 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente2, "Ben Saúde", medico1, DateTime.Parse("2020-06-01"));
-        var ordemServico3 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente3, "SulAmerica Saúde", medico2, DateTime.Parse("2020-06-01"));
-        var ordemServico4 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente4, "Unimed", medico2, DateTime.Parse("2020-06-01"));
-        var ordemServico5 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente5, "Austa Cliníca", medico3, DateTime.Parse("2020-06-01"));
+        ordemServico1.AddExame(new OrdemServicoExame(ordemServico1.Id, exame1.Id, exame1.Preco));
+        ordemServico1.AddExame(new OrdemServicoExame(ordemServico1.Id, exame2.Id, exame2.Preco));
+        ordemServico1.AddExame(new OrdemServicoExame(ordemServico1.Id, exame3.Id, exame3.Preco));
 
-        ordemServico1.AddExames(ordemServicoExames);
-        ordemServico2.AddExames(ordemServicoExames);
-        ordemServico3.AddExames(ordemServicoExames);
-        ordemServico4.AddExames(ordemServicoExames);
-        ordemServico5.AddExames(ordemServicoExames);
+        var ordemServico2 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente2, "Ben Saúde", medico1, DateTime.Parse("2020-06-01"));
+        ordemServico2.AddExame(new OrdemServicoExame(ordemServico2.Id, exame1.Id, exame1.Preco));
+        ordemServico2.AddExame(new OrdemServicoExame(ordemServico2.Id, exame2.Id, exame2.Preco));
+        ordemServico2.AddExame(new OrdemServicoExame(ordemServico2.Id, exame3.Id, exame3.Preco));
+
+        var ordemServico3 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente3, "SulAmerica Saúde", medico2, DateTime.Parse("2020-06-01"));
+        ordemServico3.AddExame(new OrdemServicoExame(ordemServico3.Id, exame1.Id, exame1.Preco));
+        ordemServico3.AddExame(new OrdemServicoExame(ordemServico3.Id, exame2.Id, exame2.Preco));
+        ordemServico3.AddExame(new OrdemServicoExame(ordemServico3.Id, exame3.Id, exame3.Preco));
+
+        var ordemServico4 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente4, "Unimed", medico2, DateTime.Parse("2020-06-01"));
+        ordemServico4.AddExame(new OrdemServicoExame(ordemServico4.Id, exame1.Id, exame1.Preco));
+        ordemServico4.AddExame(new OrdemServicoExame(ordemServico4.Id, exame2.Id, exame2.Preco));
+        ordemServico4.AddExame(new OrdemServicoExame(ordemServico4.Id, exame3.Id, exame3.Preco));
+
+        var ordemServico5 = new OrdemServico(postoColeta1, DateTime.Parse("2020-05-28"), paciente5, "Austa Cliníca", medico3, DateTime.Parse("2020-06-01"));
+        ordemServico5.AddExame(new OrdemServicoExame(ordemServico5.Id, exame1.Id, exame1.Preco));
+        ordemServico5.AddExame(new OrdemServicoExame(ordemServico5.Id, exame2.Id, exame2.Preco));
+        ordemServico5.AddExame(new OrdemServicoExame(ordemServico5.Id, exame3.Id, exame3.Preco));
 
         await _ordemServicoRepository.AddAsync(ordemServico1);
         await _ordemServicoRepository.AddAsync(ordemServico2);

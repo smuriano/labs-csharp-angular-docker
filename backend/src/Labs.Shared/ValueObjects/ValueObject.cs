@@ -5,7 +5,7 @@ namespace Labs.Shared.ValueObjects
 {
   public class ValueObject
   {
-    public ValidationResult ValidationResult { get; private set; }
+    internal ValidationResult ValidationResult { get; private set; }
     public bool IsValid { get; private set; }
 
     public bool Validate<TValueObject>(TValueObject valueObject, AbstractValidator<TValueObject> validator)

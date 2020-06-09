@@ -39,10 +39,9 @@ namespace Labs.Infra.EntityTypeConfigurations
 
       //builder.HasOne(x => x.Corporate).WithMany().HasForeignKey(x => x.CorporateId);
 
-      builder.OwnsOne(x => x.Endereco).Ignore(o => o.ValidationResult);
+      // builder.OwnsOne(x => x.Endereco).Ignore(o => o.ValidationResult);
       builder.OwnsOne(x => x.Endereco).Ignore(o => o.IsValid);
 
-      builder.Ignore(x => x.ValidationResult);
       builder.Ignore(x => x.IsValid);
     }
   }

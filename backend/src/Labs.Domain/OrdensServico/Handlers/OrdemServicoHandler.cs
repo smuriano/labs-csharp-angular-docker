@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Labs.Domain.Miscellaneous.Commands;
 using Labs.Domain.OrdensServico.Commands;
 using Labs.Domain.OrdensServico.Entities;
@@ -11,7 +14,8 @@ namespace Labs.Domain.OrdensServico.Handlers
 {
   public class OrdemServicoHandler :
     IHandler<AddOrdemServicoCommand>,
-    IHandler<UpdateOrdemServicoCommand>
+    IHandler<UpdateOrdemServicoCommand>,
+    IHandler<RemoveOrdemServicoCommand>
   {
     public readonly IOrdemServicoRepository _ordemServicoRepository;
     public readonly IUoW _uow;
@@ -22,7 +26,7 @@ namespace Labs.Domain.OrdensServico.Handlers
       _uow = uow;
     }
 
-    public ICommandResult Handle(AddOrdemServicoCommand command)
+    public async Task<ICommandResult> Handle(AddOrdemServicoCommand command)
     {
       try
       {
@@ -35,45 +39,73 @@ namespace Labs.Domain.OrdensServico.Handlers
 
         if (ordemServico.IsValid)
         {
-          _ordemServicoRepository.AddAsync(ordemServico);
-          // ordemServico.Exames.ForEach(x =>
-          // {
-          //   _ordemServicoRepository.AddExameAsync(x);
-          // });
-
-          _uow.CommitAsync();
+          await _ordemServicoRepository.AddAsync(ordemServico);
+          await _uow.CommitAsync();
         }
 
-        return new CommandResult(true, "Ordem de servico salva com sucesso", ordemServico);
+        return new CommandResult(true, "Ordem de servico incluída com sucesso", ordemServico);
       }
-      catch
+      catch (Exception e)
       {
-        _uow.RollbackAsync();
-        return new CommandResult(false, "Problema com a gravação, tente mais tarde", null);
+        await _uow.RollbackAsync();
+        return new CommandResult(false, $"Problema com a inclusão, tente mais tarde. Erro ${e.Message}", null);
       }
     }
 
-    public ICommandResult Handle(UpdateOrdemServicoCommand command)
+    public async Task<ICommandResult> Handle(UpdateOrdemServicoCommand command)
     {
       try
       {
         var ordemServico = _ordemServicoRepository.GetByIdAsync(command.Id).GetAwaiter().GetResult();
-        ordemServico.RemoveAllExame();
+        ordemServico.Update(command.PostoColetaId, command.PacienteId, command.Convenio, command.MedicoId, command.DataRetirada);
+
+        foreach (var exame in ordemServico.Exames.ToList())
+        {
+          if (!command.Exames.Any(x => x.Id == exame.Id))
+            ordemServico.Exames.Remove(exame);
+        };
+
         foreach (var exame in command.Exames)
         {
-          ordemServico.AddExame(new OrdemServicoExame(ordemServico.Id, exame.ExameId, exame.Preco));
+          var ordemServicoExame = ordemServico.Exames.FirstOrDefault(x => x.Id == exame.Id);
+
+          if (ordemServicoExame == null)
+          {
+            ordemServico.AddExame(new OrdemServicoExame(ordemServico.Id, exame.ExameId, exame.Preco));
+          }
+          else
+          {
+            ordemServicoExame.Update(exame.ExameId, exame.Preco);
+          }
         }
 
         if (ordemServico.IsValid)
-          _ordemServicoRepository.UpdateAsync(ordemServico);
+        {
+          await _ordemServicoRepository.UpdateAsync(ordemServico);
+          await _uow.CommitAsync();
+        }
 
-        _uow.CommitAsync();
-        return new CommandResult(true, "Ordem de servico salva com sucesso", ordemServico);
+        return new CommandResult(true, "Ordem de servico atualizada com sucesso", ordemServico);
       }
-      catch
+      catch (Exception e)
       {
-        _uow.RollbackAsync();
-        return new CommandResult(false, "Problema com a gravação, tente mais tarde", null);
+        await _uow.RollbackAsync();
+        return new CommandResult(false, $"Problema com a atualização, tente mais tarde. Erro ${e.Message}", null);
+      }
+    }
+
+    public async Task<ICommandResult> Handle(RemoveOrdemServicoCommand command)
+    {
+      try
+      {
+        await _ordemServicoRepository.RemoveAsync(command.Id);
+        await _uow.CommitAsync();
+        return new CommandResult(true, "Ordem de servico excluída com sucesso", null);
+      }
+      catch (Exception e)
+      {
+        await _uow.RollbackAsync();
+        return new CommandResult(false, $"Problema com a exclusão, tente mais tarde. Erro ${e.Message}", null);
       }
     }
   }

@@ -6,7 +6,6 @@ ENV NODE_ENV=production
 ENV ENV=prod
 COPY package.json ./
 RUN npm install
-#RUN npm i -g react-scripts@3.4.1
 COPY . ./
 RUN npm run build
 

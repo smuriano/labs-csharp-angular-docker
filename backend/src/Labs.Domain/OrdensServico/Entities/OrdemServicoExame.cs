@@ -22,7 +22,16 @@ namespace Labs.Domain.OrdensServico.Entities
 
     public virtual OrdemServico OrdemServico { get; private set; }
     public virtual Exame Exame { get; private set; }
+
+    public void Update(Guid exameId, decimal preco)
+    {
+      ExameId = exameId;
+      Preco = preco;
+
+      Validate(this, new OrdemServicoExameValidator());
+    }
   }
+
   public class OrdemServicoExameValidator : AbstractValidator<OrdemServicoExame>
   {
     public OrdemServicoExameValidator()

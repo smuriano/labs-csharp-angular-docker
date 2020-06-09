@@ -34,6 +34,7 @@ namespace Labs.Infra.Repositories
         .Include(x => x.Paciente)
         .Include(x => x.Medico)
         .Include(x => x.Exames)
+          .ThenInclude(e => e.Exame)
         .AsNoTracking()
         .SingleOrDefaultAsync(x => x.Id == id);
 
@@ -58,6 +59,31 @@ namespace Labs.Infra.Repositories
 
       _context.Entry(entityExist).State = EntityState.Modified;
       _context.Entry(entityExist).CurrentValues.SetValues(ordemServico);
+
+      foreach (var exame in entityExist.Exames.ToList())
+      {
+        if (!ordemServico.Exames.Any(x => x.Id == exame.Id))
+          _context.Entry(exame).State = EntityState.Deleted;
+      };
+
+      var newOrdemServicoExameList = new List<OrdemServicoExame>();
+
+      foreach (var exame in ordemServico.Exames)
+      {
+        var entityChildExist = entityExist.Exames.FirstOrDefault(x => x.Id == exame.Id);
+
+        if (entityChildExist == null)
+        {
+          newOrdemServicoExameList.Add(exame);
+        }
+        else
+        {
+          _context.Entry(entityChildExist).State = EntityState.Modified;
+          _context.Entry(entityChildExist).CurrentValues.SetValues(exame);
+        }
+      };
+
+      await _context.OrdemServicoExames.AddRangeAsync(newOrdemServicoExameList);
     }
 
     public async Task RemoveAsync(Guid id)
@@ -67,6 +93,7 @@ namespace Labs.Infra.Repositories
       if (entityExist == null)
         return;
 
+      entityExist.Exames.ForEach(e => _context.OrdemServicoExames.Remove(e));
       _context.OrdensServico.Remove(entityExist);
     }
 

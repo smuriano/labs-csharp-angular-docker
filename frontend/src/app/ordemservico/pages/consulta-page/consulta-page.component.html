@@ -11,8 +11,28 @@
   </div>
 
   <div class="row row-cols-1 row-cols-md-2" *ngIf="(ordemServicosList$ | async) as ordemServicosList; else loading">
-    <app-ordemservico-card *ngFor="let ordemServico of ordemServicosList" [ordemServicoList]="ordemServico">
-    </app-ordemservico-card>
+    <div class="col mb-4" *ngFor="let ordemServico of ordemServicosList">
+      <div class="card w-100">
+        <div class="card-body pb-0">
+          <h5 class="card-title">{{ordemServico.pacienteNome}}</h5>
+          <h6 class="card-subtitle mb-3 text-muted">{{ordemServico.postoColetaNome}}</h6>
+          <p class="small mb-0 text-muted lh-120">Médico: {{ordemServico.medicoNome}}</p>
+          <p class="small mb-0 text-muted lh-120">Convênio: {{ordemServico.convenio}}</p>
+          <p class="small mb-2 text-muted lh-120">Realizado em {{ordemServico.dataExame | date: 'dd/MM/yyyy' }}</p>
+          <div class="d-flex flex-row w-100 bd-highlight">
+            <div class="bd-highlight">
+              <p class="small text-success">Retirar em {{ordemServico.dataRetirada | date: 'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="ml-auto bd-highlight">
+              <button type="button" class="btn btn-primary btn-sm"
+                [routerLink]="['/ordens', ordemServico.id]">Editar</button>
+              <button type="button" class="btn btn-primary btn-sm ml-2"
+                (click)="onDelete(ordemServico.id)">Excluir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <ng-template #loading>

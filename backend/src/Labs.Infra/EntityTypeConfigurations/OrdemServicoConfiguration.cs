@@ -22,7 +22,6 @@ namespace Labs.Infra.EntityTypeConfigurations
 
       builder.HasMany(x => x.Exames).WithOne(i => i.OrdemServico).HasForeignKey(f => f.OrdemServicoId);
 
-      builder.Ignore(x => x.ValidationResult);
       builder.Ignore(x => x.IsValid);
     }
   }

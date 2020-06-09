@@ -18,7 +18,6 @@ namespace Labs.Infra.EntityTypeConfigurations
       builder.HasOne(x => x.Exame).WithMany().HasForeignKey(x => x.ExameId);
       builder.Property(x => x.Preco).IsRequired().HasDefaultValue(0);
 
-      builder.Ignore(x => x.ValidationResult);
       builder.Ignore(x => x.IsValid);
     }
   }

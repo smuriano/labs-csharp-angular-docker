@@ -30,7 +30,7 @@ namespace Labs.Domain.OrdensServico.Entities
     public string Convenio { get; private set; }
     public Guid MedicoId { get; private set; }
     public DateTime DataRetirada { get; private set; }
-    public List<OrdemServicoExame> Exames { get; set; } = new List<OrdemServicoExame>();
+    public List<OrdemServicoExame> Exames { get; private set; } = new List<OrdemServicoExame>();
 
     public decimal Total() => Exames.Sum(x => x.Preco);
 
@@ -38,23 +38,17 @@ namespace Labs.Domain.OrdensServico.Entities
     public virtual Paciente Paciente { get; private set; }
     public virtual Medico Medico { get; private set; }
 
-    public void AddExames(List<OrdemServicoExame> exames)
+    public void Update(Guid postoColetaId, Guid pacienteId, string convenio, Guid medicoId, DateTime dataRetirada)
     {
-      exames.ForEach(exame => AddExame(exame));
+      PostoColetaId = postoColetaId;
+      PacienteId = pacienteId;
+      Convenio = convenio;
+      MedicoId = medicoId;
+      DataRetirada = dataRetirada;
+
+      Validate(this, new OrdemServicoValidator());
     }
 
-    public void AddExames(IEnumerable<OrdemServicoExame> exames)
-    {
-      foreach (var exame in exames)
-      {
-        AddExame(exame);
-      }
-    }
-
-    public void RemoveAllExame()
-    {
-      Exames.Clear();
-    }
     public void AddExame(OrdemServicoExame exame)
     {
       if (exame.IsValid)

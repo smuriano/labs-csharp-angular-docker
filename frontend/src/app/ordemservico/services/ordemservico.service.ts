@@ -27,5 +27,9 @@ export class OrdemServicoService {
     );
   }
 
-
+  deleteOrdem(id: string) {
+    return this.http.delete(`${this.ordensApi}/${id}`).pipe(
+      take(1)
+    );
+  }
 }

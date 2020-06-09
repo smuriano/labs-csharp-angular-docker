@@ -19,7 +19,7 @@ namespace Labs.Shared.Entities
     public void SetCreated() => CreatedAt = DateTime.UtcNow;
     public void SetModified() => ModifiedAt = DateTime.UtcNow;
 
-    public ValidationResult ValidationResult { get; private set; }
+    internal ValidationResult ValidationResult { get; private set; }
     public bool IsValid { get; private set; }
 
     public bool Validate<TEntity>(TEntity model, AbstractValidator<TEntity> validator)

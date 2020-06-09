@@ -15,10 +15,12 @@ namespace Labs.Api.Controllers
   public class OrdensServicoController : ControllerBase
   {
     private readonly IOrdemServicoRepository _ordemServicoRepository;
+    private readonly OrdemServicoHandler _handler;
 
-    public OrdensServicoController(IOrdemServicoRepository ordemServicoRepository)
+    public OrdensServicoController(IOrdemServicoRepository ordemServicoRepository, OrdemServicoHandler handler)
     {
       _ordemServicoRepository = ordemServicoRepository;
+      _handler = handler;
     }
 
     [HttpGet]
@@ -52,63 +54,66 @@ namespace Labs.Api.Controllers
     public async Task<ActionResult<OrdemServicoListViewModel>> GetById(Guid id)
     {
       var ordemServico = await _ordemServicoRepository.GetByIdAsync(id);
-      var result = new OrdemServicoViewModel
-      {
-        Id = ordemServico.Id,
-        PostoColetaId = ordemServico.PostoColetaId,
-        PostoColetaNome = ordemServico.PostoColeta.Descricao,
-        DataExame = ordemServico.DataExame,
-        PacienteId = ordemServico.PacienteId,
-        PacienteNome = ordemServico.Paciente.Nome,
-        Convenio = ordemServico.Convenio,
-        MedicoId = ordemServico.MedicoId,
-        MedicoNome = ordemServico.Medico.Nome,
-        DataRetirada = ordemServico.DataRetirada,
-        Exames = new List<OrdemServicoExameViewModel>()
-      };
 
-      ordemServico.Exames.ForEach(x =>
+      if (ordemServico != null)
       {
-        result.Exames.Add(
-          new OrdemServicoExameViewModel
-          {
-            Id = x.Id,
-            OrdemServicoId = x.OrdemServicoId,
-            ExameId = x.ExameId,
-            ExameNome = x.Exame.Descricao,
-            Preco = x.Preco
-          });
-      });
+        var result = new OrdemServicoViewModel
+        {
+          Id = ordemServico.Id,
+          PostoColetaId = ordemServico.PostoColetaId,
+          PostoColetaNome = ordemServico.PostoColeta.Descricao,
+          DataExame = ordemServico.DataExame,
+          PacienteId = ordemServico.PacienteId,
+          PacienteNome = ordemServico.Paciente.Nome,
+          Convenio = ordemServico.Convenio,
+          MedicoId = ordemServico.MedicoId,
+          MedicoNome = ordemServico.Medico.Nome,
+          DataRetirada = ordemServico.DataRetirada,
+          Exames = new List<OrdemServicoExameViewModel>()
+        };
 
-      return Ok(result);
+        ordemServico.Exames.ForEach(x =>
+        {
+          result.Exames.Add(
+            new OrdemServicoExameViewModel
+            {
+              Id = x.Id,
+              OrdemServicoId = x.OrdemServicoId,
+              ExameId = x.ExameId,
+              ExameNome = x.Exame.Descricao,
+              Preco = x.Preco
+            });
+        });
+        return Ok(result);
+      }
+      else
+      {
+        return NotFound();
+      }
     }
 
     [HttpPost]
-    public ActionResult<CommandResult> Post(
-      [FromBody] AddOrdemServicoCommand command,
-      [FromServices] OrdemServicoHandler handler)
+    public async Task<ActionResult<CommandResult>> Post(
+      [FromBody] AddOrdemServicoCommand command)
     {
-      return Ok((CommandResult)handler.Handle(command));
+      return Ok((CommandResult)await _handler.Handle(command));
     }
 
     [HttpPut("{id:Guid}")]
-    public ActionResult<CommandResult> Put(
+    public async Task<ActionResult<CommandResult>> Put(
       Guid id,
-      [FromBody] UpdateOrdemServicoCommand command,
-      [FromServices] OrdemServicoHandler handler)
+      [FromBody] UpdateOrdemServicoCommand command)
     {
       if (id != command.Id)
         return BadRequest(new CommandResult(false, "Id diferente do cabeçalho da requisição", null));
 
-      return Ok((CommandResult)handler.Handle(command));
+      return Ok((CommandResult)await _handler.Handle(command));
     }
 
     [HttpDelete("{id:Guid}")]
-    public async Task<ActionResult<bool>> Delete(Guid id)
+    public async Task<ActionResult<CommandResult>> Delete(Guid id)
     {
-      await _ordemServicoRepository.RemoveAsync(id);
-
-      return Ok(Task.CompletedTask);
+      return Ok((CommandResult)await _handler.Handle(new RemoveOrdemServicoCommand { Id = id }));
     }
   }
 }

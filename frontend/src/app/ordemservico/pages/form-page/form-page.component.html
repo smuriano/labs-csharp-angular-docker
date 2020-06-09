@@ -11,7 +11,7 @@
       </div>
       <div class="col-md-2 mb-1">
         <label class="control-label">Data</label>
-        <input type="date" class="form-control" id="data" formControlName="data" required>
+        <input class="form-control" id="dataExame" formControlName="dataExame" bsDatepicker [bsConfig]="dpConfig">
       </div>
     </div>
     <div class="form-row">
@@ -35,15 +35,11 @@
     <div class="form-row">
       <div class="col-md-6 mb-1">
         <label class="control-label">Convênio</label>
-        <input type="text" class="form-control" id="convenio" formControlName="convenio" value="">
+        <input type="text" class="form-control" id="convenio" formControlName="convenio">
       </div>
       <div class="col-md-2 mb-1">
         <label class="control-label">Data Retirada</label>
-        <input type="date" class="form-control" id="dataRetirada" formControlName="dataRetirada" required>
-      </div>
-      <div class="col-md-4 mb-1">
-        <label class="control-label">Valor da ordem de serviço</label>
-        <input type="numer" class="form-control text-right" id="valorOrdem" name="valorOrdem" readonly>
+        <input class="form-control" id="dataRetirada" formControlName="dataRetirada" bsDatepicker [bsConfig]="dpConfig">
       </div>
     </div>
 
@@ -52,7 +48,7 @@
         <h4>Exames</h4>
       </div>
       <div class="ml-auto bd-highlight">
-        <button type="button" class="btn btn-sm btn-primary text-white" (click)="onOpenModalExameItem(0, exames)">
+        <button type="button" class="btn btn-sm btn-primary text-white" (click)="onOpenModalExameItem(-1, exames)">
           <i class="fas fa-plus-circle"></i>
           Exame
         </button>
@@ -68,21 +64,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="d-flex" *ngIf="items?.length == 0">
+        <tr class="d-flex" *ngIf="ordemServico?.exames.length === 0">
           <td class="col-sm-12 font-italic text-center">
             Nenhum exame adicionado na ordem de serviço.
           </td>
         </tr>
-        <tr class="d-flex" *ngFor="let item of items; let i=index;">
-          <th class="col-1" scope="row">{{ i }}</th>
-          <td class="col-sm-7">{{ item.exameNome }}</td>
-          <td class="col-sm-2">{{ item.preco | currency: 'BRL' }}</td>
+        <tr class="d-flex" *ngFor="let exame of ordemServico?.exames; let i=index;">
+          <th class="col-1" scope="row">{{ i + 1 }}</th>
+          <td class="col-sm-7">{{ exame.exameNome }}</td>
+          <td class="col-sm-2">{{ exame.preco | currency: 'BRL' }}</td>
           <td class="col-sm-2">
             <span class="float-right">
               <button class="btn btn-sm btn-outline-primary" (click)="onOpenModalExameItem(i, exames)">
                 <i class="fas fa-pen"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger ml-2">
+              <button class="btn btn-sm btn-outline-danger ml-2" (click)="onDeleteExame(i)">
                 <i class="far fa-trash-alt"></i>
               </button>
             </span>
@@ -92,12 +88,13 @@
     </table>
     <div class="form-group">
       <button type="button" class="btn btn-primary"><i class="fas fa-check"></i> Salvar</button>
-      <button type="button" class="btn btn-outline-danger ml-1"><i class="fas fa-times"></i> Cancelar</button>
+      <button type="button" class="btn btn-outline-danger ml-1" (click)="closeForm()"><i class="fas fa-times"></i>
+        Cancelar</button>
     </div>
   </div>
 </div>
 
-<ng-template #exames>
+<ng-template [formGroup]="ordemServicoExameForm" #exames>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Exame</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
@@ -108,8 +105,7 @@
     <div class="form-row">
       <div class="col-md-12 mb-1">
         <label class="control-label">Exame</label>
-        <!-- <select class="form-control" id="postoColetaId" formControlName="postoColetaId" -->
-        <select class="form-control">
+        <select class="form-control" id="exameId" formControlName="exameId" (change)="updatePreco($event.target.value)">
           <option *ngFor="let exame of exames$ | async" value="{{ exame.id }}">
             {{ exame.descricao }}
           </option>
@@ -119,12 +115,12 @@
     <div class="form-row">
       <div class="col-md-4 mb-1">
         <label class="control-label">Valor do Exame</label>
-        <input type="numer" class="form-control text-right" id="currency" name="currency" readonly>
+        <input type="numer" class="form-control text-right" id="preco" formControlName="preco" readonly>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="onAddOrEditExames()"><i class="fas fa-check"></i>
+    <button type="button" class="btn btn-primary" (click)="onAddOrEditExame()"><i class="fas fa-check"></i>
       Salvar</button>
     <button type="button" class="btn btn-outline-secondary ml-1" (click)="closeModal()"><i class="fas fa-times"></i>
       Cancelar</button>

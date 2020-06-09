@@ -46,7 +46,14 @@ namespace Labs.Api
       services.AddTransient<OrdemServicoHandler, OrdemServicoHandler>();
 
       services.AddCors();
-      services.AddControllers();
+      services.AddControllers()
+        .AddNewtonsoftJson(o =>
+        {
+          o.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+          o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
+
+      services.AddResponseCompression();
 
       services.AddSwaggerGen(c =>
         {
@@ -119,6 +126,8 @@ namespace Labs.Api
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Clinical Labs API vV1");
         c.RoutePrefix = string.Empty;
       });
+
+      app.UseResponseCompression();
 
       app.UseRouting();
 

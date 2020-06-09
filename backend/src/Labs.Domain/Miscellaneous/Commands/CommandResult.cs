@@ -4,8 +4,6 @@ namespace Labs.Domain.Miscellaneous.Commands
 {
   public class CommandResult : ICommandResult
   {
-    public CommandResult() { }
-
     public CommandResult(bool success, string message, object data)
     {
       Success = success;
